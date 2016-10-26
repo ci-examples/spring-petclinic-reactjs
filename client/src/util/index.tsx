@@ -1,5 +1,9 @@
 import { IHttpMethod } from '../types';
-export const url = (path: string): string => `http://localhost:8080/${path}`;
+
+declare var __API_SERVER_URL__;
+const BACKEND_URL = (typeof __API_SERVER_URL__ === 'undefined' ? 'http://localhost:8080' : __API_SERVER_URL__);
+
+export const url = (path: string): string => `${BACKEND_URL}/${path}`;
 
 /**
  * path: relative PATH without host and port (i.e. '/api/123')
@@ -20,6 +24,6 @@ export const submitForm = (method: IHttpMethod, path: string, data: any, onSucce
   };
 
   console.log('Submitting to ' + method + ' ' + requestUrl);
-  fetch(requestUrl, fetchParams)
+  return fetch(requestUrl, fetchParams)
     .then(response => response.status === 204 ? onSuccess(response.status, {}) : response.json().then(result => onSuccess(response.status, result)));
 };

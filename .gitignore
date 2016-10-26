@@ -5,6 +5,7 @@ target/*
 .idea
 *.iml
 /target
+npm-debug.log
 /build
 /classes
 /.gradle
