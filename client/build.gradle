@@ -14,7 +14,9 @@ apply plugin: 'com.moowork.node'
 
 task buildClean(type: NpmTask) {
     inputs.files(fileTree("src"))
-    inputs.files(fileTree("public"))
+    inputs.files(fileTree("public") {
+        exclude 'dist'
+    })
     outputs.dir("public/dist")
 
     args = ['run', 'build:clean']
