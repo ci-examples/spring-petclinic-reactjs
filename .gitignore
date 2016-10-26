@@ -6,4 +6,5 @@ target/*
 *.iml
 /target
 /build
+/classes
 /.gradle
