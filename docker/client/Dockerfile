@@ -1,4 +1,4 @@
-FROM nginx:1.10
+FROM nginx:1.11.5-alpine
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY petclinic.conf /etc/nginx/conf.d/petclinic.conf
 COPY public /wwwroot
