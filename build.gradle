@@ -3,13 +3,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE"
     }
 }
-
-apply plugin: 'java'
-apply plugin: 'war'
-apply plugin: 'maven'
+plugins {
+    id 'war'
+    id 'net.saliman.cobertura' version '2.3.2'
+}
 apply plugin: 'spring-boot'
 
 
@@ -18,10 +18,15 @@ version = '1.4.0'
 
 description = """petclinic"""
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+bootRepackage {
+    classifier = "boot"
+    mainClass =  "org.springframework.samples.petclinic.PetClinicApplication"
 }
 
 repositories {
@@ -56,23 +61,27 @@ dependencies {
 }
 
 task copyDockerFiles(type: Copy) {
+    group = "docker"
     from 'docker'
     into 'build/docker'
 }
 
 task copyWarToDocker(type: Copy, dependsOn: war) {
-    from war.archivePath
+    group = "docker"
+    from "$war.destinationDir/$war.baseName-$war.version-$bootRepackage.classifier.$war.extension"
     into "build/docker/server"
 
     rename { "$war.baseName.$war.extension" }
 }
 
 task copyClientToDocker(type: Copy, dependsOn: ':client:buildClean') {
+    group = "docker"
     from 'client/public'
     into "build/docker/client/public"
 }
 
 task prepareDocker() {
+    group = "docker"
     dependsOn copyDockerFiles,copyClientToDocker,copyWarToDocker
 }
 
