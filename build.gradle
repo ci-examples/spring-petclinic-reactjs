@@ -12,7 +12,6 @@ plugins {
 }
 apply plugin: 'spring-boot'
 
-
 group = 'org.springframework.samples'
 version = '1.4.0'
 
@@ -26,7 +25,7 @@ tasks.withType(JavaCompile) {
 
 bootRepackage {
     classifier = "boot"
-    mainClass =  "org.springframework.samples.petclinic.PetClinicApplication"
+    mainClass = "org.springframework.samples.petclinic.PetClinicApplication"
 }
 
 repositories {
@@ -60,29 +59,32 @@ dependencies {
     providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.4'
 }
 
+ext.dockerGroup = 'docker'
+ext.dockerBuildDir = "$buildDir/docker"
+
 task copyDockerFiles(type: Copy) {
-    group = "docker"
+    group = dockerGroup
     from 'docker'
-    into 'build/docker'
+    into dockerBuildDir
 }
 
 task copyWarToDocker(type: Copy, dependsOn: war) {
-    group = "docker"
+    group = dockerGroup
     from "$war.destinationDir/$war.baseName-$war.version-$bootRepackage.classifier.$war.extension"
-    into "build/docker/server"
+    into "$dockerBuildDir/server"
 
     rename { "$war.baseName.$war.extension" }
 }
 
 task copyClientToDocker(type: Copy, dependsOn: ':client:buildClean') {
-    group = "docker"
+    group = dockerGroup
     from 'client/public'
-    into "build/docker/client/public"
+    into "$dockerBuildDir/client/public"
 }
 
 task prepareDocker() {
-    group = "docker"
-    dependsOn copyDockerFiles,copyClientToDocker,copyWarToDocker
+    group = dockerGroup
+    dependsOn copyDockerFiles, copyClientToDocker, copyWarToDocker
 }
 
 build.dependsOn prepareDocker
