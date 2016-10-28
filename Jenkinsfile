@@ -1,5 +1,5 @@
 node {
     checkout scm
 
-    sh './gradlew war'
+    sh './gradlew build'
 }
