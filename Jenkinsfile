@@ -1,4 +1,5 @@
 node {
-    git url: 'https://github.com/nilshartmann/spring-petclinic.git', branch: 'docker'
+    checkout scm
+
     sh './gradlew war'
 }
