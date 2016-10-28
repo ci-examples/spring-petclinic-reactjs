@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'com.moowork.node'
 
 
-task buildClean(type: NpmTask) {
+task buildClean(type: NpmTask, dependsOn: 'npmInstall') {
     group = "node"
     inputs.files(fileTree("src"))
     inputs.files(fileTree("public") {
