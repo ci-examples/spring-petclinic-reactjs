@@ -5,8 +5,8 @@
   "main": "index.js",
   "repository": "https://github.com/nilshartmann/spring-petclinic",
   "scripts": {
-    "postinstall": "typings install",
-    "install-types": "typings install",
+    "postinstall": "./node_modules/.bin/typings install",
+    "install-types": "./node_modules/.bin/typings install",
     "test": "jest",
     "test:watch": "jest --watchAll --no-cache",
     "start": "node server.js",
