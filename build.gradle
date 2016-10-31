@@ -68,7 +68,7 @@ task copyDockerFiles(type: Copy) {
     into dockerBuildDir
 }
 
-task copyWarToDocker(type: Copy, dependsOn: war) {
+task copyWarToDocker(type: Copy) {
     group = dockerGroup
     from "$war.destinationDir/$war.baseName-$war.version-$bootRepackage.classifier.$war.extension"
     into "$dockerBuildDir/server"
@@ -76,7 +76,7 @@ task copyWarToDocker(type: Copy, dependsOn: war) {
     rename { "$war.baseName.$war.extension" }
 }
 
-task copyClientToDocker(type: Copy, dependsOn: ':client:buildClean') {
+task copyClientToDocker(type: Copy) {
     group = dockerGroup
     from 'client/public'
     into "$dockerBuildDir/client/public"
@@ -87,4 +87,4 @@ task prepareDocker() {
     dependsOn copyDockerFiles, copyClientToDocker, copyWarToDocker
 }
 
-build.dependsOn prepareDocker
+// build.dependsOn prepareDocker
