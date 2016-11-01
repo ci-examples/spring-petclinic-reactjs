@@ -13,7 +13,6 @@ node {
 
 	stage('Build React Frontend') {
 		sh 'export'
-		// npm install WORKAROUND: https://github.com/npm/npm/issues/3497#issuecomment-23966536
-		sh 'cd client && npm install --unsafe-perm && npm test && npm run build:clean'
+		sh 'cd client && npm install && npm test && npm run build:clean'
 	}
 }
