@@ -25,8 +25,9 @@ node {
 
 
 	stage('Build Docker') {
+		sh './gradlew prepareDocker'
 		docker.withRegistry('http://localhost:5000') {
-				def server = docker.build("petclinic-server", "${WORKSPACE}/docker/server")
+				def server = docker.build("petclinic-server", "${WORKSPACE}/build/docker/server")
 
 				server.push 'master'
         server.push "${commit_id}"
