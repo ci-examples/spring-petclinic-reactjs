@@ -7,8 +7,8 @@ node {
     checkout scm
 		sh 'git clean -fdx'
 
-		sh "git describe --always HEAD > .git/commit-abbrev"
-		commit_abbrev = readFile('.git/commit-abbrev').trim()
+		sh "mkdir -p build && git describe --always HEAD > build/commit-abbrev"
+		commit_abbrev = readFile('build/commit-abbrev').trim()
 		println commit_abbrev
 	}
 
@@ -36,6 +36,8 @@ node {
         client.push "${commit_abbrev}"
     }
 
-		//archiveArtifacts artifacts: '.git/commit-abbrev'
+		stage('Archive') {
+				archiveArtifacts artifacts: 'build/commit-abbrev'
+		}
 	}
 }
