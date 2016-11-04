@@ -36,6 +36,6 @@ node {
         client.push "${commit_abbrev}"
     }
 
-		archiveArtifacts artifacts: '.git/commit-abbrev'
+		//archiveArtifacts artifacts: '.git/commit-abbrev'
 	}
 }
