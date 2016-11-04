@@ -35,5 +35,7 @@ node {
 				client.push 'latest'
         client.push "${commit_abbrev}"
     }
+
+		archive '.git/commit-abbrev'
 	}
 }
