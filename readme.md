@@ -1,5 +1,5 @@
 # Spring Boot version of the Spring PetClinic Sample Application with a ReactJS frontend
-[![Build Status](https://travis-ci.org/spring-projects/spring-petclinic.png?branch=master)](https://travis-ci.org/spring-projects/spring-petclinic/)
+[![Build Status](https://travis-ci.org/ci-examples/spring-petclinic-reactjs.svg?branch=master)](https://travis-ci.org/ci-examples/spring-petclinic-reactjs)
 
 ## Notes on the ReactJS version
 Please find more information (e.g. how to run the sample) in the `client`-folder: [client/README.md](client/README.md)
