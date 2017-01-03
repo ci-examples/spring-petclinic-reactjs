@@ -9,6 +9,7 @@ buildscript {
 plugins {
     id 'war'
     id 'net.saliman.cobertura' version '2.3.2'
+    id "org.sonarqube" version "2.2"
 }
 apply plugin: 'spring-boot'
 
@@ -26,6 +27,16 @@ tasks.withType(JavaCompile) {
 bootRepackage {
     classifier = "boot"
     mainClass = "org.springframework.samples.petclinic.PetClinicApplication"
+}
+
+cobertura {
+  coverageFormats = ['html','xml']
+}
+
+sonarqube {
+  properties {
+    property "sonar.cobertura.reportPath", "build/reports/cobertura/coverage.xml"
+  }
 }
 
 repositories {
