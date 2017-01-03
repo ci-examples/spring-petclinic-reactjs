@@ -13,8 +13,15 @@ node {
 	}
 
 	stage('Build Java Backend') {
-		sh './gradlew build'
+		sh './gradlew cobertura build'
 	}
+
+	stage('SonarQube analysis') {
+    withSonarQubeEnv('sonar') {
+      // requires SonarQube Scanner for Gradle 2.1+
+      sh './gradlew sonarqube'
+    }
+  }
 
 	stage('Build React Frontend') {
 		sh 'export'
