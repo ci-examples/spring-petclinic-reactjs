@@ -13,13 +13,13 @@ node {
 	}
 
 	stage('Build Java Backend') {
-		sh './gradlew cobertura build'
+		sh './gradlew build'
 	}
 
 	stage('SonarQube analysis') {
     withSonarQubeEnv('sonar') {
       // requires SonarQube Scanner for Gradle 2.1+
-      sh './gradlew sonarqube'
+      sh './gradlew cobertura sonarqube'
     }
   }
 
