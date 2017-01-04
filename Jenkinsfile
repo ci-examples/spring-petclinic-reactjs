@@ -1,19 +1,25 @@
 node {
-
-	sh 'npm -v'
-
 	def commit_abbrev = 'unknown'
 	stage('Prepare Workspace') {
     checkout scm
 		sh 'git clean -fdx'
 
-		sh "mkdir -p build && git describe --always HEAD > build/commit-abbrev"
-		commit_abbrev = readFile('build/commit-abbrev').trim()
+		def out = sh script: 'git describe --always HEAD', returnStdout: true
+		commit_abbrev = out.trim()
 		println commit_abbrev
 	}
 
-	stage('Build Java Backend') {
-		sh './gradlew build'
+	stage('Build') {
+      parallel (
+          backend: {
+            sh './gradlew build'
+          },
+          client: {
+            sh 'export'
+  		    	sh 'cd client && yarn install && yarn test && yarn run build:clean'
+          },
+          failFast: true
+      )
 	}
 
 	stage('SonarQube analysis') {
@@ -22,12 +28,6 @@ node {
       sh './gradlew cobertura sonarqube'
     }
   }
-
-	stage('Build React Frontend') {
-		sh 'export'
-		sh 'cd client && yarn install && yarn test && yarn run build:clean'
-	}
-
 
 	stage('Build Docker') {
 		sh './gradlew prepareDocker'
@@ -45,6 +45,8 @@ node {
 	}
 
 	stage('Archive') {
-        	archiveArtifacts artifacts: 'build/commit-abbrev'
+		archiveArtifacts artifacts: 'build/reports/**'
+		publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'build/reports/cobertura', reportFiles: 'index.html', reportName: 'Cobertura'])
+		publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'build/reports/tests/test', reportFiles: 'index.html', reportName: 'Tests'])
 	}
 }
