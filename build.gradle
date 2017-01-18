@@ -73,10 +73,27 @@ dependencies {
 ext.dockerGroup = 'docker'
 ext.dockerBuildDir = "$buildDir/docker"
 
-task copyDockerFiles(type: Copy) {
+task copyDockerComposeFile(type: Copy) {
+    def expandMap = [server_image: project.ext.properties['docker.server.image'], client_image: project.ext.properties['docker.client.image']]
+    inputs.properties expandMap
+
     group = dockerGroup
     from 'docker'
     into dockerBuildDir
+    expand expandMap
+    include '*.template'
+    rename { String fileName ->
+        fileName.replace('.template', '')
+    }
+}
+
+
+task copyDockerFiles(type: Copy) {
+    group = dockerGroup
+    dependsOn copyDockerComposeFile
+    from 'docker'
+    into dockerBuildDir
+    exclude '*.template'
 }
 
 task copyWarToDocker(type: Copy) {
@@ -97,5 +114,6 @@ task prepareDocker() {
     group = dockerGroup
     dependsOn copyDockerFiles, copyClientToDocker, copyWarToDocker
 }
+
 
 // build.dependsOn prepareDocker
