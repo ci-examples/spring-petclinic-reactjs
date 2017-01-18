@@ -42,10 +42,13 @@ node {
 					client.push 'latest'
           client.push "${commit_abbrev}"
         }
+
+		sh "./gradlew copyDockerComposeFile -Pdocker.server.image=petclinic-server.${commit_abbrev} -Pdocker.client.image=petclinic-client.${commit_abbrev}"
 	}
 
 	stage('Archive') {
 		archiveArtifacts artifacts: 'build/reports/**'
+		archiveArtifacts artifacts: 'build/docker/docker-compose.yml'
 		publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'build/reports/cobertura', reportFiles: 'index.html', reportName: 'Cobertura'])
 		publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'build/reports/tests/test', reportFiles: 'index.html', reportName: 'Tests'])
 	}
