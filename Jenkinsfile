@@ -1,4 +1,5 @@
 node {
+	def docker_registry='localhost:5000'
 	def commit_abbrev = 'unknown'
 	stage('Prepare Workspace') {
     checkout scm
@@ -31,7 +32,7 @@ node {
 
 	stage('Build Docker') {
 		sh './gradlew prepareDocker'
-		docker.withRegistry('http://localhost:5000') {
+		docker.withRegistry("http://${docker_registry}") {
 					def server = docker.build("petclinic-server", "${WORKSPACE}/build/docker/server")
 
 					server.push 'latest'
@@ -43,7 +44,7 @@ node {
           client.push "${commit_abbrev}"
         }
 
-		sh "./gradlew copyDockerComposeFile -Pdocker.server.image=petclinic-server.${commit_abbrev} -Pdocker.client.image=petclinic-client.${commit_abbrev}"
+		sh "./gradlew copyDockerComposeFile -Pdocker.server.image=${docker_registry}/petclinic-server:${commit_abbrev} -Pdocker.client.image=${docker_registry}/petclinic-client:${commit_abbrev}"
 	}
 
 	stage('Archive') {
